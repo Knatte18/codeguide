@@ -40,18 +40,19 @@ Repo-level docs (like this file) live in `_codeguide/` at the repo root.
 
 ### One doc per component
 
-Each source file or source folder gets its own doc file. The doc file name matches the source:
+Each source file or source folder gets its own doc file. The doc file name must exactly match the source name — this is the contract the reverse lookup depends on. Never mangle, abbreviate, or prefix a doc name to avoid a collision; use sub-area folders instead (see below).
 
 - `parser.py` → `_codeguide/modules/Parser.md`
 - `utils/` (folder) → `_codeguide/modules/Utils.md`
 - `inventory/` (folder with multiple files) → `_codeguide/modules/Inventory.md`
 
-When several small, related source files in a folder share a single doc named after the folder (e.g., `Exporters.md` covers `CsvExporter.cs`, `JsonExporter.cs`, etc.), the reverse lookup uses two steps:
+When several small, related source files in a folder share a single doc named after the folder (e.g., `Exporters.md` covers `CsvExporter.cs`, `JsonExporter.cs`, etc.), the reverse lookup uses these steps:
 
 1. Given `Foo.cs`, look for `modules/Foo.md`.
 2. If not found, use the parent folder name: `Foo.cs` is in `Bar/` → look for `modules/Bar.md`.
+3. If not found at the top level, check sub-area folders: look for `modules/*/Foo.md` or `modules/*/Bar.md`.
 
-No searching required at either step. Never fall back to Grep or Glob to find a doc — if both steps fail, the file is undocumented.
+No searching required at any step — the Overview's module table resolves which sub-area a name lives in. Never fall back to Grep or Glob to find a doc — if the Overview doesn't list it, the file is undocumented.
 
 Even small components (a 20-line interface, a single struct) get their own doc. A short doc is better than one buried inside a larger file.
 
@@ -69,7 +70,11 @@ _codeguide/
 
 ### Sub-area folders
 
-When a project has enough modules that the flat `modules/` folder becomes hard to scan, group related modules into sub-area folders. Each sub-area gets its own `Overview.md` that serves as a routing table for that area:
+Sub-area folders serve two purposes: organization and disambiguation. They are **mandatory** when two source folders share a name under different parents (e.g., `core/fetch/` and `orchestration/fetch/`). Without sub-areas, both would map to `modules/Fetch.md`, breaking the reverse lookup. The doc tree must mirror the source tree's nesting to keep each name's lookup path unique.
+
+Sub-area folders are also useful when the flat `modules/` folder becomes hard to scan, even without name collisions.
+
+Each sub-area gets its own `Overview.md` that serves as a routing table for that area:
 
 ```
 _codeguide/
