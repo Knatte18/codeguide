@@ -1,6 +1,6 @@
 ---
 name: codeguide-check
-description: "Check _codeguide/ pointer consistency: Overview tables vs actual doc files, sibling links, cross-area links. Does not check code accuracy."
+description: "Check _codeguide/ pointer consistency and local-rules validity. Does not check doc-to-code accuracy."
 argument-hint: "[project]"
 ---
 
@@ -15,7 +15,7 @@ Read `_codeguide/modules/DocumentationGuide.md` first. It defines the linking ru
 `$ARGUMENTS` controls what gets checked:
 
 - No argument → all documented projects + repo-level docs
-- `WellboreModel` → only that project's `_codeguide/`
+- `MyProject` → only that project's `_codeguide/`
 
 ## Checks
 
@@ -47,6 +47,22 @@ b. Has no dead links (project Overview files that don't exist).
 
 c. Projects without `_codeguide/` are marked as "*not yet documented*" or similar.
 
+### 5. Local-rules validation
+
+If `_codeguide/local-rules.md` exists, read it and check each rule that makes a verifiable claim against the codebase. Verifiable claims include: dependency direction between modules, named patterns or conventions, structural invariants (e.g., "all controllers inherit from BaseController"), layer ordering.
+
+For each verifiable rule:
+- Spot-check the claim against the code (e.g., verify the dependency direction, check that the referenced pattern still exists).
+- If the rule matches the code: pass silently.
+- If there is a mismatch: **stop and present both sides to the user**:
+  - What the rule says (quote the relevant line from local-rules.md)
+  - What the code shows (file, line, or search result that contradicts)
+  - Ask: *"Is the rule outdated (update it), or is the code non-conforming (flag it)?"*
+
+**Do not auto-fix rules. Do not silently skip mismatches.** A mismatch can mean the rule drifted (convention changed, rule wasn't updated) or the code drifted (someone broke the convention). Only the user can decide which.
+
+Skip rules that are purely stylistic guidance with no verifiable assertion (e.g., "keep docs concise").
+
 ## Output
 
 Report findings as a checklist:
@@ -64,6 +80,10 @@ Report findings as a checklist:
 
 ### Repo-level
 - [x] Project table complete
+
+### Local rules
+- [x] "Services depend on Repositories, never the reverse" — verified
+- [ ] MISMATCH: Rule says "all endpoints return ApiResponse<T>", but `UserController.cs:47` returns `IActionResult` — rule outdated or code non-conforming?
 ```
 
 If everything passes, say so briefly.

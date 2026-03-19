@@ -13,9 +13,9 @@ _codeguide/
 ├── config.yaml                    ← source file extensions (you own this)
 ├── local-rules.md                 ← repo-specific doc rules (you own this)
 ├── Overview.md                    ← repo routing table (you own this)
+├── NavigationHooks.md             ← hook reference (plugin-owned)
 ├── modules/
-│   ├── DocumentationGuide.md      ← how to write docs (plugin-owned)
-│   └── NavigationHooks.md         ← how hooks work (plugin-owned)
+│   └── DocumentationGuide.md      ← how to write docs (plugin-owned)
 └── runtime/
     └── sessions/                  ← turn-scoped state (not version-controlled)
 ```
@@ -24,17 +24,17 @@ _codeguide/
 
 1. **Check prerequisites:** Verify the working directory is a git repo (`.git/` exists). If not, stop with an error.
 
-2. **Find plugin templates:** The templates are at `${CLAUDE_PLUGIN_ROOT}/templates/` (the codeguide plugin's install location). Read the template files from there:
-   - `DocumentationGuide.md`
-   - `NavigationHooks.md`
-   - `config.yaml`
-   - `local-rules.md`
+2. **Find plugin files:** Read the following from the plugin's install location (`${CLAUDE_PLUGIN_ROOT}`):
+   - `templates/DocumentationGuide.md`
+   - `templates/config.yaml`
+   - `templates/local-rules.md`
+   - `hooks/NavigationHooks.md`
 
 3. **Create directories:** Create `_codeguide/modules/` and `_codeguide/runtime/sessions/`.
 
 4. **Copy plugin-owned files** (always overwritten on re-run):
    - `templates/DocumentationGuide.md` → `_codeguide/modules/DocumentationGuide.md`
-   - `templates/NavigationHooks.md` → `_codeguide/modules/NavigationHooks.md`
+   - `hooks/NavigationHooks.md` → `_codeguide/NavigationHooks.md`
 
 5. **Create repo-specific files** (only if they don't exist):
    - `_codeguide/config.yaml` — if `$ARGUMENTS` contains `--extensions`, write a config with those extensions. Otherwise copy the template (with commented-out examples).
@@ -49,7 +49,7 @@ _codeguide/
 
      See [DocumentationGuide.md](modules/DocumentationGuide.md) for how docs are written and organized.
 
-     See [NavigationHooks.md](modules/NavigationHooks.md) for routing enforcement.
+     See [NavigationHooks.md](NavigationHooks.md) for routing enforcement.
      ```
 
 6. **Update .gitignore:** Add `**/_codeguide/runtime/` if not already present.

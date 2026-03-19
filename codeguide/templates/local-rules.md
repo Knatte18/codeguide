@@ -8,6 +8,6 @@ review local-rules files across repos to identify rules worth promoting to the
 generic DocumentationGuide.md.
 
 <!-- Example:
-- StateSet-related modules always live in WellboreModel, not Common
-- All solver docs must include a "Convergence" section
+- All adapter modules live in Integration, not Common
+- Retry policy docs must include a "Failure Modes" section
 -->

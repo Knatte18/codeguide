@@ -2,8 +2,6 @@
 
 Documents the hook system that enforces correct `_codeguide/` routing and catches navigation failures for guide improvement.
 
-For the full explanation, see the [codeguide repository](https://github.com/hanf/codeguide).
-
 ---
 
 ## Two Rules Being Enforced

@@ -22,6 +22,7 @@ context = (
     "NEVER use grep, glob, or find for file discovery. Use _codeguide routing only.\n"
     "NEVER spawn a subagent without including the relevant project Overview in the agent prompt.\n"
     "ALWAYS load required skills before starting any task.\n"
+    "When writing or updating _codeguide/ docs, read _codeguide/local-rules.md first (if it exists) for repo-specific rules.\n"
     "_codeguide/ is a routing guide, NOT a source of truth. "
     "After using _codeguide/ to identify the relevant module, you MUST open and read the actual source files before answering. "
     "Do not answer factual questions about behavior, logic, contracts, or values from _codeguide/ content alone — the docs may be incomplete or imprecise.\n"

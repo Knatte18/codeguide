@@ -28,6 +28,7 @@ After install and setup:
 | `/codeguide-check` | Check pointer consistency (dead links, missing entries) |
 | `/codeguide-apply-rules` | Enforce guide + local rules on existing docs (no source reads — fast) |
 | `/review-navigation` | Analyze navigation violations and propose guide improvements |
+| `/codeguide-tracking` | Toggle navigation enforcement on/off |
 | `/cleanup-runtime` | Delete orphaned session files |
 
 ### How enforcement works
@@ -50,7 +51,7 @@ Periodically collect `local-rules.md` files from multiple repos to identify patt
 | File | Owner | On update |
 |---|---|---|
 | `_codeguide/modules/DocumentationGuide.md` | Plugin | Overwritten by `/codeguide-setup` |
-| `_codeguide/modules/NavigationHooks.md` | Plugin | Overwritten by `/codeguide-setup` |
+| `_codeguide/NavigationHooks.md` | Plugin | Overwritten by `/codeguide-setup` |
 | `_codeguide/config.yaml` | Repo | Preserved |
 | `_codeguide/local-rules.md` | Repo | Preserved |
 | `_codeguide/Overview.md` | Repo | Preserved |

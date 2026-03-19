@@ -11,9 +11,9 @@ Update existing `_codeguide/` documentation to match the current Documentation G
 `$ARGUMENTS` controls what gets updated:
 
 - No argument → all docs in all documented projects
-- `WellboreModel` → all docs in that project's `_codeguide/`
-- `WellboreModel/Solvers` → only the Solvers subfolder docs
-- `WellboreModel/Solvers/Wemod` → only that one doc file
+- `MyProject` → all docs in that project's `_codeguide/`
+- `MyProject/Storage` → only the Storage subfolder docs
+- `MyProject/Storage/BlobCache` → only that one doc file
 
 ## Steps
 

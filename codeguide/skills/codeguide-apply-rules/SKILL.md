@@ -20,7 +20,7 @@ Check existing `_codeguide/` docs against the Documentation Guide and local rule
 
 3. **Determine scope:** Parse `$ARGUMENTS`:
    - No argument → all docs in all documented projects
-   - `WellboreModel` → only that project's `_codeguide/`
+   - `MyProject` → only that project's `_codeguide/`
 
 4. **For each doc in scope:**
 
