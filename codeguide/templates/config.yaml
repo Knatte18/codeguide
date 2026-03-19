@@ -1,0 +1,6 @@
+# Extensions recognized as source files by _codeguide/ hooks and skills.
+# Add entries here to support additional languages without modifying hook code.
+source_extensions:
+  # - .cs
+  # - .py
+  # - .ts

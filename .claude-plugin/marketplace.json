@@ -1,0 +1,21 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "codeguide",
+  "version": "1.0.0",
+  "description": "Navigation-first documentation system for AI-assisted codebases",
+  "owner": {
+    "name": "Knatte18"
+  },
+  "plugins": [
+    {
+      "name": "codeguide",
+      "description": "Navigation-first documentation system for AI-assisted codebases",
+      "version": "1.0.0",
+      "author": {
+        "name": "Knatte18"
+      },
+      "source": "./codeguide",
+      "category": "productivity"
+    }
+  ]
+}
