@@ -18,7 +18,35 @@ Before opening any source file or running any search, read the relevant project'
 
 ---
 
-## How It Works
+## Hook Inventory
+
+Hooks are split into two groups: **always-on** (provide core value) and **enforcement** (validate that the guide is working). The `tracking` flag in `_codeguide/config.yaml` controls which set is active. Toggle with `/codeguide-tracking`.
+
+### Always-on hooks
+
+These run regardless of the tracking flag.
+
+| Hook | Event | What it does |
+|---|---|---|
+| `check_docs_on_prompt.py` | SubagentStart | Injects `_codeguide/Overview.md` into every subagent so it can route without searching |
+| `update_docs_after_edit.py` | PostToolUse (Edit/Write) | Reminds Claude to verify docs when source files or `_codeguide/` module docs are modified |
+
+### Enforcement hooks (tracking only)
+
+These run only when `tracking: true`. They create session state, enforce the "read Overview first" rule, and log violations for review.
+
+| Hook | Event | What it does |
+|---|---|---|
+| `nav_init_session.py` | UserPromptSubmit | Creates a turn-scoped session state file capturing the user prompt |
+| `nav_track_read.py` | PreToolUse (Read) | Sets `overview_read` flag when any `_codeguide/` file is accessed |
+| `nav_track_search.py` | PreToolUse (Grep/Glob/Bash) | Counts search calls; blocks after threshold if Overview not yet read; logs violations |
+| `nav_track_task.py` | PreToolUse (Agent) | Counts subagent spawns for parity checking |
+| `nav_track_subagent_inject.py` | SubagentStart | Counts subagent injections for parity checking |
+| `nav_stop.py` | Stop | Logs parity issues (spawned vs injected) and deletes the session state file |
+
+---
+
+## How Enforcement Works
 
 A turn-scoped session state file tracks whether `_codeguide/` has been read and how many search calls have been made. If the search count exceeds the threshold without `_codeguide/` having been read, the search tool is blocked until the guide is read.
 

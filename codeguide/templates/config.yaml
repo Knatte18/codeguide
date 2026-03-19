@@ -4,3 +4,9 @@ source_extensions:
   # - .cs
   # - .py
   # - .ts
+
+# Enable navigation enforcement and violation tracking.
+# When true, hooks block searches until _codeguide/Overview.md is read,
+# and log violations for review with /review-navigation.
+# Toggle with /codeguide-tracking.
+tracking: true
