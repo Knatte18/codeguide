@@ -16,7 +16,7 @@ Toggle the `tracking` flag in `_codeguide/config.yaml` and install the matching 
 
 ## Steps
 
-1. **Read** `_codeguide/config.yaml`. If it doesn't exist, stop with: "Run /codeguide-setup first."
+1. **Read** `_codeguide/config.yaml`. If it doesn't exist, stop with: "Run /codeguide-init first."
 
 2. **Determine new value:**
    - Argument `on` → new value is `true`

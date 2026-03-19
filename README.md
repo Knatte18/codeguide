@@ -4,7 +4,7 @@ Navigation-first documentation system for AI-assisted codebases.
 
 Provides routing guides (`_codeguide/`) that direct Claude Code to the right source files before reading them, with enforcement hooks that block blind searching and log violations for guide improvement.
 
-Installed as a Claude Code plugin. Per-repo setup via `/codeguide-setup`.
+Installed as a Claude Code plugin. Per-repo setup via `/codeguide-init`.
 
 ## Install
 
@@ -15,21 +15,19 @@ See [INSTALL.md](INSTALL.md).
 After install and setup:
 
 1. Edit `_codeguide/config.yaml` — set your source file extensions
-2. Run `/codeguide-init <project>` to create docs for a project
+2. Run `/codeguide-generate <project>` to create docs for a project
 3. Claude Code will now route through `_codeguide/` before searching
 
 ### Skills
 
 | Skill | Purpose |
 |---|---|
-| `/codeguide-setup` | Set up `_codeguide/` in the current repo (run once) |
-| `/codeguide-init` | Create docs for a project from scratch |
-| `/codeguide-update` | Sync docs with code changes (reads source — slow) |
-| `/codeguide-check` | Check pointer consistency (dead links, missing entries) |
-| `/codeguide-apply-rules` | Enforce guide + local rules on existing docs (no source reads — fast) |
-| `/review-navigation` | Analyze navigation violations and propose guide improvements |
+| `/codeguide-init` | Initialize `_codeguide/` in the current repo (run once) |
+| `/codeguide-generate` | Create docs for undocumented source files |
+| `/codeguide-sync` | Sync existing docs with code changes and rule updates |
+| `/codeguide-check` | Check pointer consistency, missing docs, and local-rules validity |
 | `/codeguide-tracking` | Toggle navigation enforcement on/off |
-| `/cleanup-runtime` | Delete orphaned session files |
+| `/review-navigation` | Analyze navigation violations and propose guide improvements |
 
 ### How enforcement works
 
@@ -50,8 +48,8 @@ Periodically collect `local-rules.md` files from multiple repos to identify patt
 
 | File | Owner | On update |
 |---|---|---|
-| `_codeguide/modules/DocumentationGuide.md` | Plugin | Overwritten by `/codeguide-setup` |
-| `_codeguide/NavigationHooks.md` | Plugin | Overwritten by `/codeguide-setup` |
+| `_codeguide/modules/DocumentationGuide.md` | Plugin | Overwritten by `/codeguide-init` |
+| `_codeguide/NavigationHooks.md` | Plugin | Overwritten by `/codeguide-init` |
 | `_codeguide/config.yaml` | Repo | Preserved |
 | `_codeguide/local-rules.md` | Repo | Preserved |
 | `_codeguide/Overview.md` | Repo | Preserved |
@@ -65,4 +63,4 @@ Re-install the plugin:
 claude plugin install codeguide@codeguide
 ```
 
-Then run `/codeguide-setup` in each repo to update plugin-owned template files.
+Then run `/codeguide-init` in each repo to update plugin-owned files.

@@ -47,7 +47,19 @@ b. Has no dead links (project Overview files that don't exist).
 
 c. Projects without `_codeguide/` are marked as "*not yet documented*" or similar.
 
-### 5. Local-rules validation
+### 5. Missing docs
+
+Read `_codeguide/config.yaml` to get the list of recognized source extensions. For each source file or source folder in the project that matches those extensions, check if a corresponding doc exists using the naming rules from the guide:
+
+- `parser.py` → `_codeguide/modules/Parser.md`
+- `utils/` (folder) → `_codeguide/modules/Utils.md`
+- If not found by file name, check by parent folder name (the two-step lookup from the guide).
+
+Report each source file that has no corresponding doc. Do not create docs — just list what's missing. The user can then run `/codeguide-generate` to fill the gaps.
+
+Exclude build output directories (`obj/`, `bin/`, `__pycache__/`, `.venv/`).
+
+### 6. Local-rules validation
 
 If `_codeguide/local-rules.md` exists, read it and check each rule that makes a verifiable claim against the codebase. Verifiable claims include: dependency direction between modules, named patterns or conventions, structural invariants (e.g., "all controllers inherit from BaseController"), layer ordering.
 
@@ -77,6 +89,8 @@ Report findings as a checklist:
 - [ ] SIBLING LINK: `Foo.md:15` links to `[Bar](Bar.md)`
 - [ ] CROSS-AREA LINK: `Foo.md:22` links to `[Baz](../Other/Baz.md)` — should target Overview.md
 - [x] No orphan docs
+- [ ] MISSING DOC: `src/Validators/InputValidator.cs` has no corresponding doc
+- [ ] MISSING DOC: `src/Middleware/` folder has no corresponding doc
 
 ### Repo-level
 - [x] Project table complete
@@ -91,5 +105,5 @@ If everything passes, say so briefly.
 ## Rules
 
 - Read-only — do not modify any files.
-- Do not check whether doc content matches source code. That is `/codeguide-update`'s job.
+- Do not check whether doc content matches source code. That is `/codeguide-sync`'s job.
 - Do not create or delete docs.

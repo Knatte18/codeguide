@@ -1,57 +1,67 @@
 ---
 name: codeguide-init
-description: "Create _codeguide/ documentation for a project from scratch. Use when a project has source code but no docs yet."
-argument-hint: "<project-name>"
+description: "Initialize _codeguide/ in the current repo. Creates skeleton files, config, and .gitignore entry. Run once per repo."
+argument-hint: "[--extensions .cs .py .ts]"
 ---
 
-Create `_codeguide/` documentation for the specified project. Does **not** commit.
+Initialize `_codeguide/` in the current repository. Run this once after installing the codeguide plugin. Does **not** commit.
+
+## What this creates
+
+```
+_codeguide/
+├── config.yaml                    ← source file extensions (you own this)
+├── local-rules.md                 ← repo-specific doc rules (you own this)
+├── Overview.md                    ← repo routing table (you own this)
+├── NavigationHooks.md             ← hook reference (plugin-owned)
+├── modules/
+│   └── DocumentationGuide.md      ← how to write docs (plugin-owned)
+└── runtime/
+    └── sessions/                  ← turn-scoped state (not version-controlled)
+```
 
 ## Steps
 
-1. **Read the Documentation Guide:** Read `_codeguide/modules/DocumentationGuide.md` in full. All docs must follow its structure.
+1. **Check prerequisites:** Verify the working directory is a git repo (`.git/` exists). If not, stop with an error.
 
-2. **Read local rules:** Read `_codeguide/local-rules.md` if it exists. These are repo-specific additions to the guide.
+2. **Find plugin files:** Read the following from the plugin's install location (`${CLAUDE_PLUGIN_ROOT}`):
+   - `templates/DocumentationGuide.md`
+   - `templates/config.yaml`
+   - `templates/local-rules.md`
+   - `hooks/NavigationHooks.md`
 
-3. **Identify the project:** Use `$ARGUMENTS` as the project folder name. If no argument, ask the user which project to document.
+3. **Create directories:** Create `_codeguide/modules/` and `_codeguide/runtime/sessions/`.
 
-4. **Check for existing docs:** If `<project>/_codeguide/Overview.md` already exists, stop and suggest `/codeguide-update` instead.
+4. **Copy plugin-owned files** (always overwritten on re-run):
+   - `templates/DocumentationGuide.md` → `_codeguide/modules/DocumentationGuide.md`
+   - `hooks/NavigationHooks.md` → `_codeguide/NavigationHooks.md`
 
-5. **Read source extensions:** Read `_codeguide/config.yaml` to get the list of recognized source extensions.
+5. **Create repo-specific files** (only if they don't exist):
+   - `_codeguide/config.yaml` — if `$ARGUMENTS` contains `--extensions`, write a config with those extensions. Otherwise copy the template (with commented-out examples).
+   - `_codeguide/local-rules.md` — copy from template.
+   - `_codeguide/Overview.md` — create with starter content:
+     ```markdown
+     # Repo Overview
 
-6. **Scan source structure:** List all folders and source files matching those extensions in the project (excluding build output directories like `obj/`, `bin/`, `__pycache__/`, `.venv/`). Identify major areas by folder structure.
+     TODO: Add a project map table and dependency graph.
 
-7. **Read source files:** Read all source files (per config extensions) to understand module responsibilities. Use parallel agent reads for large projects.
+     ## Documentation system
 
-8. **Decide doc granularity:** Following the guide's rules:
-   - One doc per source file or source folder
-   - Large modules with subfolders get their own `_codeguide/modules/<Module>/Overview.md` + per-file docs
-   - Small modules get a flat `_codeguide/modules/<Name>.md`
+     See [DocumentationGuide.md](modules/DocumentationGuide.md) for how docs are written and organized.
 
-9. **Create directory structure:** Create `_codeguide/` and `_codeguide/modules/` (and any subfolders for split modules).
+     See [NavigationHooks.md](NavigationHooks.md) for routing enforcement.
+     ```
 
-10. **Write the project Overview:** Create `_codeguide/Overview.md` with:
-   - What this project is responsible for (sharp boundary)
-   - What this project does NOT own (negative boundaries with redirects)
-   - Dependencies with direction (consumes X, consumed by Y)
-   - Module table with routing hints ("Touch this when...")
-   - Cross-cutting patterns
+6. **Update .gitignore:** Add `**/_codeguide/runtime/` if not already present.
 
-11. **Write module docs:** For each module, create the doc following the guide structure:
-   - What and why
-   - Capability summaries (plain language, no signatures)
-   - When not to use (negative space)
-   - Relationships (depends on, consumed by)
+7. **Report** what was created vs skipped.
 
-12. **Update IDE visibility (language-specific):** For .NET projects with a `.csproj`, add `<None Include="_codeguide\**\*.md" />` to an ItemGroup. Skip for other languages.
+## On re-run
 
-13. **Update repo Overview:** In `_codeguide/Overview.md` at repo root, update the project row to link to the new Overview.
+Safe to re-run. Plugin-owned files (DocumentationGuide.md, NavigationHooks.md) are overwritten. Repo-specific files (config.yaml, local-rules.md, Overview.md, module docs) are never touched.
 
 ## Rules
 
-- Follow the Documentation Guide exactly — read it first, not from memory.
-- Apply local rules from `local-rules.md` on top of the guide.
-- Do not include API signatures, line-by-line walkthroughs, or internal algorithm details.
-- Do not include code-derived values: formulas, thresholds, constants, or expressions copied from source.
-- Do not reference projects the code doesn't depend on.
-- Capability summaries are the highest-value section — a reader should know if the module is relevant without reading source.
-- Write docs as if they were written first and the code was written to satisfy them.
+- Do not modify existing repo-specific files.
+- Do not commit. The user decides when to commit.
+- If `_codeguide/` already exists with all files, report "already set up" and list what would be overwritten on a plugin update.

@@ -72,6 +72,15 @@ _codeguide/
 
 ---
 
+## Known Limitations
+
+The doc-update hook (`update_docs_after_edit.py`) only fires on Edit and Write. File deletions, moves, and renames go through Bash, which the hook does not match. These cases are covered by periodic skills instead:
+
+- **Orphan docs** (source deleted/moved) → `/codeguide-check` flags docs with no corresponding source
+- **Missing docs** (new source without a doc) → `/codeguide-generate` creates them
+
+---
+
 ## Adjusting the Threshold
 
 The search threshold is set in `nav_track_search.py`. Start conservative and raise if legitimate work is being blocked.
