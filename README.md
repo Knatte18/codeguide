@@ -8,4 +8,4 @@ Installed per-repo.
 
 ## Status
 
-Under development.
+Early development.
