@@ -49,14 +49,6 @@ Close and reopen Claude Code in the target repo so it picks up the plugin.
 
 This creates the `_codeguide/` directory with config, templates, and runtime folders.
 
-### 5. Add routing memories
-
-The plugin's hooks rely on Claude Code reading `_codeguide/Overview.md` before navigating the codebase. Without explicit memory entries, Claude tends to skip the routing system and search files directly. Add two feedback memories to the target repo's `.claude/` memory directory:
-
-**Routing-first lookup** — Always read `_codeguide/Overview.md` before using Grep/Glob/Bash to find files or symbols. Even targeted symbol lookups must go through routing first. Without this, Claude bypasses the routing system with direct searches and misses the documentation layer.
-
-**Source-of-truth verification** — After routing via `_codeguide/`, always read the actual source files before answering factual questions. Never answer from doc content alone. Docs can contain stale or incomplete information (e.g. a missing term in a formula), so the source code is the authority.
-
 ---
 
 ## Updating

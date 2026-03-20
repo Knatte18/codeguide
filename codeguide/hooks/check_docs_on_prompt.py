@@ -1,11 +1,11 @@
 """
-SubagentStart hook: injects the local _codeguide/Overview.md into every
-subagent so it has the project routing table in context.
+Routing injection hook for both UserPromptSubmit and SubagentStart.
+
+Injects _codeguide/Overview.md and routing instructions into the conversation
+so Claude uses the documentation routing system instead of searching directly.
 
 Overview.md is resolved from cwd (routing context). Metadata references
 (local-rules.md) walk up to the nearest ancestor that contains them.
-
-Not used for UserPromptSubmit — routing is enforced via memory + violation hooks.
 """
 
 import json
@@ -14,6 +14,9 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from _resolve import routing_root
+
+hook_input = json.loads(sys.stdin.read())
+event_name = hook_input["hook_event_name"]
 
 overview_path = routing_root() / "Overview.md"
 
@@ -37,7 +40,7 @@ context = (
 
 print(json.dumps({
     "hookSpecificOutput": {
-        "hookEventName": "SubagentStart",
+        "hookEventName": event_name,
         "additionalContext": context,
     }
 }))

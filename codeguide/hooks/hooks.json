@@ -2,6 +2,9 @@
   "hooks": {
     "UserPromptSubmit": [
       {
+        "hooks": [{"type": "command", "command": "python ${CLAUDE_PLUGIN_ROOT}/hooks/check_docs_on_prompt.py"}]
+      },
+      {
         "hooks": [{"type": "command", "command": "python ${CLAUDE_PLUGIN_ROOT}/hooks/nav_init_session.py"}]
       }
     ],
