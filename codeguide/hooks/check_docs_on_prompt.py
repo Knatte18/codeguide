@@ -1,19 +1,24 @@
 """
-SubagentStart hook: injects the repo-level _codeguide/Overview.md into every
+SubagentStart hook: injects the local _codeguide/Overview.md into every
 subagent so it has the project routing table in context.
+
+Overview.md is resolved from cwd (routing context). Metadata references
+(local-rules.md) walk up to the nearest ancestor that contains them.
 
 Not used for UserPromptSubmit — routing is enforced via memory + violation hooks.
 """
 
 import json
 import os
+import sys
 
-repo_root = os.getcwd()
-overview_path = os.path.join(repo_root, "_codeguide", "Overview.md")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _resolve import routing_root
+
+overview_path = routing_root() / "Overview.md"
 
 try:
-    with open(overview_path, "r", encoding="utf-8") as f:
-        overview = f.read()
+    overview = overview_path.read_text(encoding="utf-8")
 except FileNotFoundError:
     overview = "(ERROR: _codeguide/Overview.md not found)"
 

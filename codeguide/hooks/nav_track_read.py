@@ -8,6 +8,9 @@ import os
 import pathlib
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _resolve import routing_root
+
 data = json.load(sys.stdin)
 session_id = data.get("session_id") or os.environ.get("CLAUDE_SESSION_ID", "unknown")
 filepath = data.get("tool_input", {}).get("file_path", "")
@@ -15,7 +18,7 @@ filepath = data.get("tool_input", {}).get("file_path", "")
 if "_codeguide" not in filepath.replace("\\", "/"):
     sys.exit(0)
 
-sessions_dir = pathlib.Path(os.getcwd()) / "_codeguide" / "runtime" / "sessions"
+sessions_dir = routing_root() / "runtime" / "sessions"
 state_path = sessions_dir / f"{session_id}-state.json"
 
 if state_path.exists():

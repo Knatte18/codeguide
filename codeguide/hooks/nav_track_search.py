@@ -12,6 +12,9 @@ import pathlib
 import sys
 from datetime import datetime, timezone
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _resolve import routing_root
+
 data = json.load(sys.stdin)
 tool_name = data.get("tool_name", "")
 tool_input = data.get("tool_input", {})
@@ -39,8 +42,7 @@ if not is_search:
 if "_codeguide" in command_desc.replace("\\", "/"):
     sys.exit(0)
 
-repo_root = pathlib.Path(os.getcwd())
-runtime_dir = repo_root / "_codeguide" / "runtime"
+runtime_dir = routing_root() / "runtime"
 sessions_dir = runtime_dir / "sessions"
 issues_path = runtime_dir / "navigation-issues.md"
 

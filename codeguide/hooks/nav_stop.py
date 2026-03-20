@@ -9,13 +9,16 @@ navigation-issues.md accumulates across the working session for /review-navigati
 import json
 import os
 import pathlib
+import sys
 from datetime import datetime, timezone
 
-data = json.load(__import__("sys").stdin)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _resolve import routing_root
+
+data = json.load(sys.stdin)
 session_id = data.get("session_id") or os.environ.get("CLAUDE_SESSION_ID", "unknown")
 
-repo_root = pathlib.Path(os.getcwd())
-runtime_dir = repo_root / "_codeguide" / "runtime"
+runtime_dir = routing_root() / "runtime"
 sessions_dir = runtime_dir / "sessions"
 issues_path = runtime_dir / "navigation-issues.md"
 state_path = sessions_dir / f"{session_id}-state.json"

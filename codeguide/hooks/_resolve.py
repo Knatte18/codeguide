@@ -1,0 +1,60 @@
+"""
+Path resolution for codeguide hooks.
+
+Two-tier resolution:
+- Routing files (Overview.md, modules/) resolve from cwd — each folder with
+  a _codeguide/ is a self-contained routing node.
+- Metadata files (config.yaml, local-rules.md, DocumentationGuide.md,
+  NavigationHooks.md) resolve by walking up from cwd to the nearest ancestor
+  that contains them. These are repo-level concerns.
+"""
+
+import os
+import pathlib
+
+METADATA_FILES = {
+    "config.yaml",
+    "local-rules.md",
+    "DocumentationGuide.md",
+    "NavigationHooks.md",
+}
+
+
+def routing_root(cwd: str | None = None) -> pathlib.Path:
+    """Return the cwd-level _codeguide/ directory (routing context)."""
+    return pathlib.Path(cwd or os.getcwd()) / "_codeguide"
+
+
+def find_metadata(filename: str, cwd: str | None = None) -> pathlib.Path | None:
+    """Walk up from cwd to find _codeguide/<filename>. Returns None if not found."""
+    current = pathlib.Path(cwd or os.getcwd()).resolve()
+    while True:
+        candidate = current / "_codeguide" / filename
+        if candidate.exists():
+            return candidate
+        parent = current.parent
+        if parent == current:
+            return None
+        current = parent
+
+
+def config_path(cwd: str | None = None) -> pathlib.Path | None:
+    """Find the nearest config.yaml."""
+    return find_metadata("config.yaml", cwd)
+
+
+def load_source_extensions(cwd: str | None = None) -> list[str]:
+    """Load source extensions from the nearest config.yaml."""
+    path = config_path(cwd)
+    if path is None:
+        return []
+    extensions = []
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line.startswith("- ."):
+                    extensions.append(line[2:].strip())
+    except FileNotFoundError:
+        pass
+    return extensions

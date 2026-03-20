@@ -10,12 +10,14 @@ import os
 import pathlib
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _resolve import routing_root
+
 data = json.load(sys.stdin)
 session_id = data.get("session_id") or os.environ.get("CLAUDE_SESSION_ID", "unknown")
 prompt_text = data.get("prompt", "")[:500]  # cap at 500 chars
 
-repo_root = pathlib.Path(os.getcwd())
-sessions_dir = repo_root / "_codeguide" / "runtime" / "sessions"
+sessions_dir = routing_root() / "runtime" / "sessions"
 sessions_dir.mkdir(parents=True, exist_ok=True)
 
 state = {

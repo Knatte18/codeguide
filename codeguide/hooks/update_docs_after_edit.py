@@ -10,19 +10,10 @@ import sys
 import json
 import os
 
-# Load source extensions from config
-repo_root = os.getcwd()
-config_path = os.path.join(repo_root, "_codeguide", "config.yaml")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _resolve import load_source_extensions
 
-source_extensions = []
-try:
-    with open(config_path, "r", encoding="utf-8") as f:
-        for line in f:
-            line = line.strip()
-            if line.startswith("- ."):
-                source_extensions.append(line[2:].strip())
-except FileNotFoundError:
-    pass
+source_extensions = load_source_extensions()
 
 BUBBLE_UP = (
     "OVERVIEW BUBBLE-UP: After updating the module doc, walk upward through "
