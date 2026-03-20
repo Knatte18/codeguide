@@ -13,7 +13,7 @@ import sys
 from datetime import datetime, timezone
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from _resolve import routing_root
+from _resolve import routing_root, load_config_flag
 
 data = json.load(sys.stdin)
 session_id = data.get("session_id") or os.environ.get("CLAUDE_SESSION_ID", "unknown")
@@ -31,7 +31,7 @@ state = json.loads(state_path.read_text(encoding="utf-8"))
 spawned = state.get("subagents_spawned", 0)
 injected = state.get("subagents_injected", 0)
 
-if spawned > injected:
+if spawned > injected and load_config_flag("violation_logging"):
     runtime_dir.mkdir(parents=True, exist_ok=True)
     timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     prompt_snippet = state.get("prompt", "")[:200]

@@ -39,6 +39,23 @@ def config_path(cwd: str | None = None) -> pathlib.Path | None:
     return find_metadata(METADATA_ANCHOR, cwd)
 
 
+def load_config_flag(flag: str, cwd: str | None = None) -> bool:
+    """Read a boolean flag from the nearest config.yaml. Returns False if not found."""
+    path = config_path(cwd)
+    if path is None:
+        return False
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line.startswith(f"{flag}:"):
+                    value = line.split(":", 1)[1].strip().lower()
+                    return value == "true"
+    except FileNotFoundError:
+        pass
+    return False
+
+
 def load_source_extensions(cwd: str | None = None) -> list[str]:
     """Load source extensions from the nearest config.yaml."""
     path = config_path(cwd)

@@ -5,8 +5,10 @@ source_extensions:
   # - .py
   # - .ts
 
-# Enable navigation enforcement and violation tracking.
-# When true, hooks block searches until _codeguide/Overview.md is read,
-# and log violations for review with /review-navigation.
-# Toggle with /codeguide-tracking.
-tracking: true
+# Block search tools until _codeguide/Overview.md has been read.
+# Recommended: keeps Claude from bypassing the routing system.
+enforcement: true
+
+# Log navigation violations to runtime/navigation-issues.md for
+# review with /review-navigation. Useful during guide development.
+violation_logging: false

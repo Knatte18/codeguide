@@ -13,7 +13,7 @@ import sys
 from datetime import datetime, timezone
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from _resolve import routing_root
+from _resolve import routing_root, load_config_flag
 
 data = json.load(sys.stdin)
 tool_name = data.get("tool_name", "")
@@ -42,6 +42,12 @@ if not is_search:
 if "_codeguide" in command_desc.replace("\\", "/"):
     sys.exit(0)
 
+# Check flags — exit early if neither enforcement nor logging is active
+enforcement = load_config_flag("enforcement")
+violation_logging = load_config_flag("violation_logging")
+if not enforcement and not violation_logging:
+    sys.exit(0)
+
 runtime_dir = routing_root() / "runtime"
 sessions_dir = runtime_dir / "sessions"
 issues_path = runtime_dir / "navigation-issues.md"
@@ -59,23 +65,25 @@ state_path.write_text(json.dumps(state, indent=2), encoding="utf-8")
 THRESHOLD = 3
 
 if state["search_count"] > THRESHOLD and not state.get("overview_read", False):
-    runtime_dir.mkdir(parents=True, exist_ok=True)
-    timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
-    prompt_snippet = state.get("prompt", "")[:200]
-    entry = (
-        f"\n## {timestamp} (session: {session_id})\n"
-        f"- Prompt: `{prompt_snippet}`\n"
-        f"- search_count: {state['search_count']}\n"
-        f"- Tool: {tool_name}\n"
-        f"- Pattern: `{command_desc}`\n"
-    )
-    with issues_path.open("a", encoding="utf-8") as f:
-        f.write(entry)
+    if violation_logging:
+        runtime_dir.mkdir(parents=True, exist_ok=True)
+        timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+        prompt_snippet = state.get("prompt", "")[:200]
+        entry = (
+            f"\n## {timestamp} (session: {session_id})\n"
+            f"- Prompt: `{prompt_snippet}`\n"
+            f"- search_count: {state['search_count']}\n"
+            f"- Tool: {tool_name}\n"
+            f"- Pattern: `{command_desc}`\n"
+        )
+        with issues_path.open("a", encoding="utf-8") as f:
+            f.write(entry)
 
-    print(
-        f"NAVIGATION VIOLATION: {state['search_count']} searches run without reading "
-        f"_codeguide/. Stop. Read _codeguide/Overview.md now, then continue."
-    )
-    sys.exit(2)
+    if enforcement:
+        print(
+            f"NAVIGATION VIOLATION: {state['search_count']} searches run without reading "
+            f"_codeguide/. Stop. Read _codeguide/Overview.md now, then continue."
+        )
+        sys.exit(2)
 
 sys.exit(0)

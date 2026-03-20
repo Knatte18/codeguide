@@ -18,35 +18,48 @@ Before opening any source file or running any search, read the relevant project'
 
 ## Hook Inventory
 
-Hooks are split into two groups: **always-on** (provide core value) and **enforcement** (validate that the guide is working). The `tracking` flag in `_codeguide/config.yaml` controls which set is active. Toggle with `/codeguide-tracking`.
+Hooks are split into three layers: **base** (always active), **enforcement** (search blocking), and **audit** (parity tracking for review). Two flags in `_codeguide/config.yaml` control which layers are active:
 
-### Shared module
+- `enforcement` — adds session tracking and search blocking hooks. When on, search tools are blocked until Overview is read.
+- `violation_logging` — adds subagent parity tracking hooks and enables violation logging to `runtime/navigation-issues.md`.
+
+Toggle with `/codeguide-tracking enforcement on|off` or `/codeguide-tracking logging on|off`. The active hooks.json is rebuilt from composable base files (`hooks-base.json`, `hooks-enforcement.json`, `hooks-violation-logging.json`) by the merge script `_merge_hooks.py`.
+
+### Shared modules
 
 | File | What it does |
 |---|---|
 | `_resolve.py` | Two-tier path resolution shared by all hooks. Routing files (Overview.md, modules/) resolve from cwd. Metadata files (config.yaml, local-rules.md) resolve by walking up to the nearest ancestor that contains them. |
+| `_merge_hooks.py` | Composes hooks.json from base files. Called by `/codeguide-tracking` when flags change. |
 
-### Always-on hooks
+### Base hooks (`base_`)
 
-These run regardless of the tracking flag.
-
-| Hook | Event | What it does |
-|---|---|---|
-| `check_docs_on_prompt.py` | SubagentStart | Injects `_codeguide/Overview.md` into every subagent so it can route without searching |
-| `update_docs_after_edit.py` | PostToolUse (Edit/Write) | Reminds Claude to verify docs when source files or `_codeguide/` module docs are modified |
-
-### Enforcement hooks (tracking only)
-
-These run only when `tracking: true`. They create session state, enforce the "read Overview first" rule, and log violations for review.
+Always active regardless of flags.
 
 | Hook | Event | What it does |
 |---|---|---|
-| `nav_init_session.py` | UserPromptSubmit | Creates a turn-scoped session state file capturing the user prompt |
-| `nav_track_read.py` | PreToolUse (Read) | Sets `overview_read` flag when any `_codeguide/` file is accessed |
-| `nav_track_search.py` | PreToolUse (Grep/Glob/Bash) | Counts search calls; blocks after threshold if Overview not yet read; logs violations |
-| `nav_track_task.py` | PreToolUse (Agent) | Counts subagent spawns for parity checking |
-| `nav_track_subagent_inject.py` | SubagentStart | Counts subagent injections for parity checking |
-| `nav_stop.py` | Stop | Logs parity issues (spawned vs injected) and deletes the session state file |
+| `base_inject_routing.py` | UserPromptSubmit, SubagentStart | Injects imperative routing instructions — Claude must actively Read Overview.md |
+| `base_remind_docs.py` | PostToolUse (Edit/Write) | Reminds Claude to verify docs when source files or `_codeguide/` module docs are modified |
+
+### Enforcement hooks (`enforce_`)
+
+Active when `enforcement: true`. Create session state, enforce the "read Overview first" rule, and clean up.
+
+| Hook | Event | What it does |
+|---|---|---|
+| `enforce_init_session.py` | UserPromptSubmit | Creates a turn-scoped session state file capturing the user prompt |
+| `enforce_track_read.py` | PreToolUse (Read) | Sets `overview_read` flag when any `_codeguide/` file is accessed |
+| `enforce_track_search.py` | PreToolUse (Grep/Glob/Bash) | Counts search calls; blocks after threshold if Overview not yet read; logs violations if `violation_logging: true` |
+| `enforce_stop.py` | Stop | Logs parity issues if `violation_logging: true`; deletes the session state file |
+
+### Audit hooks (`audit_`)
+
+Active when `violation_logging: true`. Track subagent parity for `/review-navigation`.
+
+| Hook | Event | What it does |
+|---|---|---|
+| `audit_track_task.py` | PreToolUse (Agent) | Counts subagent spawns for parity checking |
+| `audit_track_subagent.py` | SubagentStart | Counts subagent injections for parity checking |
 
 ---
 
@@ -56,7 +69,7 @@ A turn-scoped session state file tracks whether `_codeguide/` has been read and 
 
 All hooks use two-tier path resolution (`_resolve.py`): routing files (Overview.md, modules/) are resolved from cwd, while metadata files (config.yaml, local-rules.md) are found by walking up from cwd to the nearest ancestor containing them. This allows VS Code to open a subfolder while hooks still find repo-level configuration.
 
-Subagents receive the cwd-level Overview injected verbatim, since they cannot inherit hook context.
+Subagents receive routing instructions (not the verbatim Overview) since they cannot inherit hook context. They must actively Read the Overview like the main conversation.
 
 Violations are logged to `_codeguide/runtime/navigation-issues.md` with the user's prompt, for later review via `/review-navigation`.
 
@@ -82,7 +95,7 @@ _codeguide/
 
 ## Known Limitations
 
-The doc-update hook (`update_docs_after_edit.py`) only fires on Edit and Write. File deletions, moves, and renames go through Bash, which the hook does not match. These cases are covered by periodic skills instead:
+The doc-update hook (`base_remind_docs.py`) only fires on Edit and Write. File deletions, moves, and renames go through Bash, which the hook does not match. These cases are covered by periodic skills instead:
 
 - **Orphan docs** (source deleted/moved) → `/codeguide-check` flags docs with no corresponding source
 - **Missing docs** (new source without a doc) → `/codeguide-generate` creates them
@@ -91,4 +104,4 @@ The doc-update hook (`update_docs_after_edit.py`) only fires on Edit and Write. 
 
 ## Adjusting the Threshold
 
-The search threshold is set in `nav_track_search.py`. Start conservative and raise if legitimate work is being blocked.
+The search threshold is set in `enforce_track_search.py`. Start conservative and raise if legitimate work is being blocked.

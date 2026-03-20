@@ -1,8 +1,8 @@
 """
 SubagentStart hook: increments subagents_injected in session state.
 
-Runs alongside the Overview injection hook (check_docs_on_prompt.py).
-Together they form a parity check: subagents_spawned (from nav_track_task.py)
+Runs alongside the routing injection hook (base_inject_routing.py).
+Together they form a parity check: subagents_spawned (from audit_track_task.py)
 vs subagents_injected detects whether the injection hook ran for every subagent.
 """
 
