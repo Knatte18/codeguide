@@ -33,7 +33,9 @@ cd /path/to/your/repo
 claude plugin install codeguide@codeguide --scope project
 ```
 
-This installs hooks and skills into `.claude/settings.json` (project-scoped). Repeat for each repo where you want codeguide.
+This writes `enabledPlugins` into `.claude/settings.json` (project-scoped). Repeat for each repo where you want codeguide.
+
+**Subfolder workspaces:** If you open Claude Code from a subfolder (e.g. a project within a monorepo), run the install from that subfolder too. The plugin activates per working directory — a parent's `.claude/settings.json` is not inherited.
 
 ### 3. Restart Claude Code
 

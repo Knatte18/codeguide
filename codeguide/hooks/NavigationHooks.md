@@ -20,6 +20,12 @@ Before opening any source file or running any search, read the relevant project'
 
 Hooks are split into two groups: **always-on** (provide core value) and **enforcement** (validate that the guide is working). The `tracking` flag in `_codeguide/config.yaml` controls which set is active. Toggle with `/codeguide-tracking`.
 
+### Shared module
+
+| File | What it does |
+|---|---|
+| `_resolve.py` | Two-tier path resolution shared by all hooks. Routing files (Overview.md, modules/) resolve from cwd. Metadata files (config.yaml, local-rules.md) resolve by walking up to the nearest ancestor that contains them. |
+
 ### Always-on hooks
 
 These run regardless of the tracking flag.
@@ -48,7 +54,9 @@ These run only when `tracking: true`. They create session state, enforce the "re
 
 A turn-scoped session state file tracks whether `_codeguide/` has been read and how many search calls have been made. If the search count exceeds the threshold without `_codeguide/` having been read, the search tool is blocked until the guide is read.
 
-Subagents receive the repo-level Overview injected verbatim, since they cannot inherit hook context.
+All hooks use two-tier path resolution (`_resolve.py`): routing files (Overview.md, modules/) are resolved from cwd, while metadata files (config.yaml, local-rules.md) are found by walking up from cwd to the nearest ancestor containing them. This allows VS Code to open a subfolder while hooks still find repo-level configuration.
+
+Subagents receive the cwd-level Overview injected verbatim, since they cannot inherit hook context.
 
 Violations are logged to `_codeguide/runtime/navigation-issues.md` with the user's prompt, for later review via `/review-navigation`.
 

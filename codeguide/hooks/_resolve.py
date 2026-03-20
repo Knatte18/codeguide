@@ -12,12 +12,8 @@ Two-tier resolution:
 import os
 import pathlib
 
-METADATA_FILES = {
-    "config.yaml",
-    "local-rules.md",
-    "DocumentationGuide.md",
-    "NavigationHooks.md",
-}
+# Metadata file that anchors the walk-up search. Change here if renamed.
+METADATA_ANCHOR = "config.yaml"
 
 
 def routing_root(cwd: str | None = None) -> pathlib.Path:
@@ -39,8 +35,8 @@ def find_metadata(filename: str, cwd: str | None = None) -> pathlib.Path | None:
 
 
 def config_path(cwd: str | None = None) -> pathlib.Path | None:
-    """Find the nearest config.yaml."""
-    return find_metadata("config.yaml", cwd)
+    """Find the nearest metadata anchor (config.yaml by default)."""
+    return find_metadata(METADATA_ANCHOR, cwd)
 
 
 def load_source_extensions(cwd: str | None = None) -> list[str]:
