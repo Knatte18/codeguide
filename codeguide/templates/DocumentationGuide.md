@@ -143,6 +143,24 @@ A module doc answers these questions:
 4. **Behavior** — what are the expected behaviors, invariants, or guarantees?
 5. **When not to use** — common misuses or wrong turns. What looks like it belongs here but doesn't? Where should consumers go instead? This negative-space guidance prevents wasted time.
 6. **Relationships** — what does it depend on, and what depends on it? Use plain-text area or concept names (e.g., "the Pipeline stages", "the Schema data model"), not markdown links to sibling files. The parent Overview resolves names to files. For cross-project dependencies, link to the other project's Overview. Omit this section entirely if the module only depends on siblings within the same project.
+7. **Source** — relative paths from the doc file to the source file(s) it documents. This lets tools and AI assistants locate source without searching. Each entry is a markdown link with a brief role note when the doc covers multiple files:
+
+```markdown
+## Source
+
+- [BlobCache.cs](../../Storage/BlobCache.cs)
+```
+
+For multi-file docs, annotate each entry so the reader knows which file covers what:
+
+```markdown
+## Source
+
+- [CsvExporter.cs](../../Exporters/CsvExporter.cs) — CSV format
+- [JsonExporter.cs](../../Exporters/JsonExporter.cs) — JSON format
+```
+
+Paths are relative to the markdown file, not the repo root. This works regardless of which directory the session runs from. The `/codeguide-generate` skill writes these paths when creating docs, and `/codeguide-sync` validates that they still resolve.
 
 Do **not** include:
 - Line-by-line code walkthroughs

@@ -46,6 +46,7 @@ Generate `_codeguide/` documentation for source files that don't have correspond
    - Capability summaries (plain language, no signatures)
    - When not to use (negative space)
    - Relationships (depends on, consumed by)
+   - Source — relative paths from the doc file to each source file it covers (see Documentation Guide for format)
 
 10. **Update the project Overview:** Add rows to the module table for each new doc. Update routing hints if the new modules change the project's scope.
 

@@ -35,17 +35,19 @@ Sync existing `_codeguide/` documentation with the current source code, Document
 
    b. **Read the corresponding source file(s)** to check if behavior, interfaces, or relationships have changed.
 
-   c. **Check doc content against source code:**
+   c. **Check the Source section:** Verify that the relative paths in the `## Source` section resolve to existing files. If a path is broken, search for the file by name and update the path. If the Source section is missing, add it using relative paths from the doc to the source file(s).
+
+   d. **Check doc content against source code:**
       - Stale content (doc describes behavior that no longer matches the code)
       - Code-derived values that should not be in the doc (formulas, thresholds, constants)
 
-   d. **Check doc structure against guide and local rules:**
+   e. **Check doc structure against guide and local rules:**
       - Missing required sections (e.g., "When not to use", "Relationships", negative boundaries in Overviews)
       - Sections that don't match guide conventions (e.g., API signatures that should be capability summaries)
       - Formatting or structural issues
       - Violations of local rules
 
-   e. **Update the doc** if any of the above apply. Preserve accurate existing content — only change what's wrong or missing.
+   f. **Update the doc** if any of the above apply. Preserve accurate existing content — only change what's wrong or missing.
 
 5. **Check Overview routing tables:** Verify that the project Overview's module table matches the actual doc files (no missing entries, no dead links, routing hints still accurate).
 
