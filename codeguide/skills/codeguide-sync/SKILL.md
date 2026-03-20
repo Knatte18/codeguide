@@ -54,7 +54,7 @@ Sync existing `_codeguide/` documentation with the current source code, Document
 ## Rules
 
 - Read the Documentation Guide and local rules first — do not rely on memory of what they say.
-- Do not create new docs for undocumented source files. That is `/codeguide-generate`'s job.
+- Do not create new docs for undocumented source files. That is `/codeguide-generate`'s job. However, flag undocumented source files to the user so they know what's missing. For large scopes, summarize (e.g., "none of the source files in ProjectX are documented") rather than listing every file.
 - Do not delete docs. If a doc has no corresponding source, flag it to the user.
 - Preserve accurate existing content. Only modify what is structurally wrong or factually stale.
 - When updating structure to match the guide, keep the existing content's meaning intact.
