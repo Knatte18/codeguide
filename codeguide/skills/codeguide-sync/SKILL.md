@@ -49,8 +49,6 @@ Sync existing `_codeguide/` documentation with the current source code, Document
 
    f. **Update the doc** if any of the above apply. Preserve accurate existing content — only change what's wrong or missing.
 
-   g. **Update the `synced:` timestamp** in the doc's YAML frontmatter to the current UTC time (`YYYY-MM-DD-HHMMSS`). If the frontmatter or `synced:` field doesn't exist, add it.
-
 5. **Check Overview routing tables:** Verify that the project Overview's module table matches the actual doc files (no missing entries, no dead links, routing hints still accurate).
 
 6. **Report changes:** Summarize what was updated and which rule or code change triggered each fix.

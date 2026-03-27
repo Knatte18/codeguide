@@ -7,19 +7,16 @@ Output: stale doc paths, one per line. Exit 0 if none, exit 1 if any stale.
 For each source file:
 1. Walk up directories to find the nearest _codeguide/ (stop at git root).
 2. Scan ## Source sections in _codeguide/modules/ to find docs referencing the file.
-3. Compare the doc's synced: frontmatter timestamp against the source file's
-   last commit date. If the source is newer, the doc is stale.
+3. Compare the doc's last commit date against the source file's last commit date.
+   If the source is newer, the doc is stale.
 4. If a doc is stale, also flag its parent Overview.md.
 """
 
-import os
 import re
 import subprocess
 import sys
-from datetime import datetime, timezone
+from datetime import datetime
 from pathlib import Path
-
-from codeguide.utcnow import TIMESTAMP_FMT
 
 
 def find_git_root(start: Path) -> Path | None:
@@ -51,38 +48,13 @@ def find_codeguide_root(source_file: Path) -> Path | None:
         current = parent
 
 
-def parse_synced_timestamp(doc_path: Path) -> datetime | None:
-    try:
-        with open(doc_path, "r", encoding="utf-8") as f:
-            content = f.read()
-    except (FileNotFoundError, OSError):
-        return None
-
-    # Look for synced: in YAML frontmatter
-    fm_match = re.match(r"^---\s*\n(.*?)\n---", content, re.DOTALL)
-    if not fm_match:
-        return None
-
-    for line in fm_match.group(1).splitlines():
-        line = line.strip()
-        if line.startswith("synced:"):
-            value = line.split(":", 1)[1].strip()
-            try:
-                return datetime.strptime(value, TIMESTAMP_FMT).replace(
-                    tzinfo=timezone.utc
-                )
-            except ValueError:
-                return None
-    return None
-
-
-def get_source_commit_date(source_file: Path) -> datetime | None:
+def get_last_commit_date(file_path: Path) -> datetime | None:
     try:
         result = subprocess.run(
-            ["git", "log", "-1", "--format=%aI", "--", str(source_file)],
+            ["git", "log", "-1", "--format=%aI", "--", str(file_path)],
             capture_output=True,
             text=True,
-            cwd=source_file.parent,
+            cwd=file_path.parent,
         )
         if result.returncode != 0 or not result.stdout.strip():
             return None
@@ -108,14 +80,13 @@ def find_docs_referencing(source_file: Path, codeguide_root: Path) -> list[Path]
         except (FileNotFoundError, OSError):
             continue
 
-        # Look for ## Source section
-        source_match = re.search(r"^## Source\s*\n(.*?)(?=\n## |\Z)", content,
-                                 re.MULTILINE | re.DOTALL)
+        source_match = re.search(
+            r"^## Source\s*\n(.*?)(?=\n## |\Z)", content, re.MULTILINE | re.DOTALL
+        )
         if not source_match:
             continue
 
         source_section = source_match.group(1)
-        # Check if any link in the Source section points to this file
         for link_match in re.finditer(r"\[.*?\]\((.*?)\)", source_section):
             rel_path = link_match.group(1)
             resolved = (doc_path.parent / rel_path).resolve()
@@ -123,7 +94,6 @@ def find_docs_referencing(source_file: Path, codeguide_root: Path) -> list[Path]
                 matching_docs.append(doc_path)
                 break
         else:
-            # Fallback: check if the filename appears in the section
             if source_name in source_section:
                 matching_docs.append(doc_path)
 
@@ -131,16 +101,12 @@ def find_docs_referencing(source_file: Path, codeguide_root: Path) -> list[Path]
 
 
 def find_parent_overview(doc_path: Path, codeguide_root: Path) -> Path | None:
-    # The parent Overview is at _codeguide/Overview.md for flat docs,
-    # or _codeguide/modules/<Subfolder>/Overview.md for nested docs
     doc_dir = doc_path.parent
     modules_dir = codeguide_root / "modules"
 
     if doc_dir == modules_dir:
-        # Flat doc — parent is _codeguide/Overview.md
         overview = codeguide_root / "Overview.md"
     else:
-        # Nested doc — parent is the subfolder's Overview.md
         overview = doc_dir / "Overview.md"
         if not overview.exists() or overview == doc_path:
             overview = codeguide_root / "Overview.md"
@@ -174,13 +140,13 @@ def main():
         if not docs:
             continue
 
-        source_date = get_source_commit_date(source_file)
+        source_date = get_last_commit_date(source_file)
         if source_date is None:
             continue
 
         for doc_path in docs:
-            synced_date = parse_synced_timestamp(doc_path)
-            if synced_date is None or source_date > synced_date:
+            doc_date = get_last_commit_date(doc_path)
+            if doc_date is None or source_date > doc_date:
                 stale_docs.add(str(doc_path))
                 overview = find_parent_overview(doc_path, codeguide_root)
                 if overview:

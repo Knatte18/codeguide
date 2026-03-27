@@ -135,16 +135,6 @@ The repo Overview does not describe individual modules — that is each project 
 
 ### Module Doc
 
-Module docs have YAML frontmatter with a `synced:` timestamp recording when the doc was last generated or synced:
-
-```yaml
----
-synced: 2026-03-26-143052
----
-```
-
-The format is `YYYY-MM-DD-HHMMSS` in UTC. `/codeguide-generate` sets this when creating a doc, `/codeguide-sync` updates it when syncing. This timestamp is used by `codeguide_stale.py` to detect docs that may be out of date relative to their source files.
-
 A module doc answers these questions:
 
 1. **What** — what does this module represent or do?

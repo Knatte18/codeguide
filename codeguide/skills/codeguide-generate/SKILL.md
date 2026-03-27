@@ -42,7 +42,6 @@ Generate `_codeguide/` documentation for source files that don't have correspond
    - Update the repo-level `_codeguide/Overview.md` project table
 
 9. **Write module docs:** For each undocumented module, create the doc following the guide structure:
-   - YAML frontmatter with `synced: YYYY-MM-DD-HHMMSS` (current UTC timestamp)
    - What and why
    - Capability summaries (plain language, no signatures)
    - When not to use (negative space)
