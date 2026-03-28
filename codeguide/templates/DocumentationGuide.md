@@ -98,6 +98,10 @@ The project-level Overview's module table lists sub-areas by name and links to t
 
 Some projects (test harnesses, standalone tools) have no meaningful module decomposition. These projects get an `Overview.md` with no `modules/` folder. The Overview states what the project is, what it does not own, and includes whatever project-specific content is useful (e.g., a coverage matrix for a test project). Do not create empty `modules/` folders or stub module docs.
 
+### Test folders
+
+Test folders may get an `Overview.md` describing test coverage scope, organization, and which source modules they exercise. Individual test files do not get their own module docs — they are not modules to route to. If a test folder needs to be excluded from doc generation entirely, add it to `cgignore.md`.
+
 ### Project overview
 
 Each project gets an `Overview.md` as the entry point, describing the project's role, its main modules, and how they relate.
