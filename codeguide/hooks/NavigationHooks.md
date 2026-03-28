@@ -94,7 +94,7 @@ _codeguide/
 
 ## Known Limitations
 
-Doc maintenance is handled by skills, not hooks. Use `/codeguide-update` after making changes, or let mill-commit call it automatically. For larger updates, use `/codeguide-sync` (scoped) or `/codeguide-generate` (scoped).
+Doc maintenance is handled by skills, not hooks. Use `/codeguide-update` after making changes, or let mill-commit call it automatically. For larger updates, use `/codeguide-maintain` (scoped) or `/codeguide-generate` (scoped).
 
 ---
 

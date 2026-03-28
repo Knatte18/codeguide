@@ -16,7 +16,7 @@ Generate `_codeguide/` documentation for source files that don't have correspond
 
 ## Steps
 
-1. **Find `_codeguide/`:** Run `python ${CLAUDE_PLUGIN_ROOT}/scripts/_resolve.py` to locate the nearest `_codeguide/` containing config.yaml. If it exits with an error, stop — run `/codeguide-init` first.
+1. **Find `_codeguide/`:** Run `python ${CLAUDE_PLUGIN_ROOT}/scripts/_resolve.py` to locate the nearest `_codeguide/` containing config.yaml. If it exits with an error, stop — run `/codeguide-setup` first.
 
 2. **Read the Documentation Guide:** Read `_codeguide/modules/DocumentationGuide.md` in full. All docs must follow its structure.
 
@@ -68,6 +68,6 @@ Generate `_codeguide/` documentation for source files that don't have correspond
 - Do not include API signatures, line-by-line walkthroughs, or internal algorithm details.
 - Do not include code-derived values: formulas, thresholds, constants, or expressions copied from source.
 - Do not reference projects the code doesn't depend on.
-- Do not modify existing docs. That is `/codeguide-sync`'s job.
+- Do not modify existing docs. That is `/codeguide-maintain`'s job.
 - Capability summaries are the highest-value section — a reader should know if the module is relevant without reading source.
 - Write docs as if they were written first and the code was written to satisfy them.

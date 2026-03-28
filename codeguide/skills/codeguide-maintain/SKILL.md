@@ -1,5 +1,5 @@
 ---
-name: codeguide-sync
+name: codeguide-maintain
 description: "Fix existing docs: content accuracy, structural violations, pointers, links, local-rules. Heavy, scoped."
 argument-hint: "[project] [module-path]"
 ---
@@ -24,7 +24,7 @@ Sync existing `_codeguide/` documentation with current source code, Documentatio
 
 ## Steps
 
-1. **Find `_codeguide/`:** Run `python ${CLAUDE_PLUGIN_ROOT}/scripts/_resolve.py` to locate the nearest `_codeguide/` containing config.yaml. If it exits with an error, stop — run `/codeguide-init` first.
+1. **Find `_codeguide/`:** Run `python ${CLAUDE_PLUGIN_ROOT}/scripts/_resolve.py` to locate the nearest `_codeguide/` containing config.yaml. If it exits with an error, stop — run `/codeguide-setup` first.
 
 2. **Read the Documentation Guide:** Read `_codeguide/modules/DocumentationGuide.md` in full. This is the authoritative structure.
 

@@ -22,15 +22,14 @@ This is done via `claude plugin install codeguide@codeguide --scope project`.
 
 | Skill | Purpose |
 |---|---|
-| `/codeguide-init` | First-time repo setup. Creates `_codeguide/` skeleton with plugin-owned files (DocumentationGuide.md, NavigationHooks.md, cgignore.md) and user-owned files (config.yaml, local-rules.md, cgexclude.md, Overview.md). Does NOT create module docs. |
-| `/codeguide-setup` | Root: refreshes plugin-owned files, merges new config keys. Subfolder: creates `_codeguide/root.txt` (cached path to repo-level `_codeguide/`) and `cgexclude.md`. |
+| `/codeguide-setup` | All setup: first-time root init, root refresh, subfolder activation. Detects context automatically. |
 
 ### Doc maintenance
 
 | Skill | Weight | Scope | What it does |
 |---|---|---|---|
 | `/codeguide-generate` | Heavy | User-specified `[project] [module-path]` | Creates docs for undocumented source files. Full source scan. |
-| `/codeguide-sync` | Heavy | User-specified `[project] [module-path]` | Fixes existing docs: content accuracy, structural violations, pointers, links, local-rules compliance. Full source + doc comparison. |
+| `/codeguide-maintain` | Heavy | User-specified `[project] [module-path]` | Fixes existing docs: content accuracy, structural violations, pointers, links, local-rules compliance. Full source + doc comparison. |
 | `/codeguide-update` | Light | Git diff (default), `1h`, `3d`, `HEAD~3`, or explicit files | Combines generate + sync, but only for files in scope. Creates missing docs AND fixes stale docs. Safe for commit-time use (called by mill-commit). |
 
 ### Review
@@ -99,7 +98,7 @@ Enforcement hooks require `enforcement: true` in config.yaml. Audit hooks requir
 
 **Routine maintenance:**
 1. `/codeguide-generate` — create missing docs
-2. `/codeguide-sync` — fix stale/broken docs
+2. `/codeguide-maintain` — fix stale/broken docs
 
 **On commit (via mill-commit):**
 1. `/codeguide-update` (auto-scoped to git diff)

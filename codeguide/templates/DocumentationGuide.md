@@ -160,7 +160,7 @@ For multi-file docs, annotate each entry so the reader knows which file covers w
 - [JsonExporter.cs](../../Exporters/JsonExporter.cs) — JSON format
 ```
 
-Paths are relative to the markdown file, not the repo root. This works regardless of which directory the session runs from. The `/codeguide-generate` skill writes these paths when creating docs, and `/codeguide-sync` validates that they still resolve.
+Paths are relative to the markdown file, not the repo root. This works regardless of which directory the session runs from. The `/codeguide-generate` skill writes these paths when creating docs, and `/codeguide-maintain` validates that they still resolve.
 
 Do **not** include:
 - Line-by-line code walkthroughs

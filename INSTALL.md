@@ -44,7 +44,7 @@ Close and reopen Claude Code in the target repo so it picks up the plugin.
 ### 4. Set up the documentation skeleton
 
 ```
-/codeguide-init .cs .py
+/codeguide-setup .cs .py
 ```
 
 This creates the `_codeguide/` directory with config, templates, and runtime folders.
@@ -70,4 +70,4 @@ Optionally set `violation_logging: true` to log navigation violations to `runtim
 After editing skills, hooks, or templates in the `codeguide/` source:
 
 1. Re-run `claude plugin install codeguide@codeguide --scope project` from each target repo.
-2. Run `/codeguide-init` in each target repo to update plugin-owned files (DocumentationGuide.md, NavigationHooks.md).
+2. Run `/codeguide-setup` in each target repo to update plugin-owned files (DocumentationGuide.md, NavigationHooks.md).
