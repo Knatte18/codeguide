@@ -61,6 +61,12 @@ Generate `_codeguide/` documentation for source files that don't have correspond
 
 13. **Report:** List what was created and what was skipped (already documented or excluded).
 
+## Parallelism
+
+For large scopes, use parallel subagents — one per project. Each subagent receives the Documentation Guide, local rules, and its project's scope, then creates docs independently. Subagents can further parallelize per module if the project has many undocumented files.
+
+Include the relevant `_codeguide/Overview.md` in every subagent prompt.
+
 ## Rules
 
 - Follow the Documentation Guide exactly — read it first, not from memory.

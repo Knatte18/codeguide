@@ -75,6 +75,12 @@ Sync existing `_codeguide/` documentation with current source code, Documentatio
 
 9. **Report changes:** Summarize what was updated and which rule or code change triggered each fix.
 
+## Parallelism
+
+For large scopes, use parallel subagents — one per project. Each subagent receives the Documentation Guide, local rules, and its project's Overview.md, then processes that project's docs independently. Subagents can further parallelize per module doc if the project is large.
+
+Include the relevant `_codeguide/Overview.md` in every subagent prompt.
+
 ## Rules
 
 - Read the Documentation Guide and local rules first — do not rely on memory.
