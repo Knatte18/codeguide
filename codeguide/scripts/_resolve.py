@@ -22,12 +22,14 @@ def routing_root(cwd: str | None = None) -> pathlib.Path:
 
 
 def find_metadata(filename: str, cwd: str | None = None) -> pathlib.Path | None:
-    """Walk up from cwd to find _codeguide/<filename>. Returns None if not found."""
+    """Walk up from cwd to find _codeguide/<filename>. Stops at git root."""
     current = pathlib.Path(cwd or os.getcwd()).resolve()
     while True:
         candidate = current / "_codeguide" / filename
         if candidate.exists():
             return candidate
+        if (current / ".git").exists():
+            return None
         parent = current.parent
         if parent == current:
             return None

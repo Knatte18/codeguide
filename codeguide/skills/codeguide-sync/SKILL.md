@@ -1,16 +1,17 @@
 ---
 name: codeguide-sync
-description: "Sync existing _codeguide/ docs with current source code, guide, and local rules. Fixes stale content and structural violations."
+description: "Fix existing docs: content accuracy, structural violations, pointers, links, local-rules. Heavy, scoped."
 argument-hint: "[project] [module-path]"
 ---
 
-Sync existing `_codeguide/` documentation with the current source code, Documentation Guide, and local rules. Fixes both content accuracy and structural compliance. Does **not** commit.
+Sync existing `_codeguide/` documentation with current source code, Documentation Guide, and local rules. Fixes content accuracy, structural compliance, pointer consistency, and link rules. Does **not** commit.
 
 ## When to use
 
 - After code changes that affect module behavior, interfaces, or relationships
 - After adding or changing a rule in `local-rules.md`
 - After a plugin update brings a new `DocumentationGuide.md`
+- As a full audit + fix pass on a project
 
 ## Scope
 
@@ -23,42 +24,54 @@ Sync existing `_codeguide/` documentation with the current source code, Document
 
 ## Steps
 
-1. **Find `_codeguide/`:** Run `python ${CLAUDE_PLUGIN_ROOT}/scripts/_resolve.py` to locate the nearest `_codeguide/` containing config.yaml. Use the returned path as the base for all `_codeguide/` references below. If it exits with an error, stop — run `/codeguide-init` first.
+1. **Find `_codeguide/`:** Run `python ${CLAUDE_PLUGIN_ROOT}/scripts/_resolve.py` to locate the nearest `_codeguide/` containing config.yaml. If it exits with an error, stop — run `/codeguide-init` first.
 
-2. **Read the Documentation Guide:** Read `_codeguide/modules/DocumentationGuide.md` in full. This is the authoritative structure — it may have changed since the docs were last written.
+2. **Read the Documentation Guide:** Read `_codeguide/modules/DocumentationGuide.md` in full. This is the authoritative structure.
 
-3. **Read local rules:** Read `_codeguide/local-rules.md` if it exists. These are repo-specific additions to the guide.
+3. **Read local rules:** Read `_codeguide/local-rules.md` if it exists.
 
-4. **Determine scope:** Parse `$ARGUMENTS` to identify which project(s) and doc file(s) to sync. If no argument, find all projects that have `_codeguide/Overview.md`.
+4. **Read ignore and exclude lists:** Read `_codeguide/cgignore.md` and `_codeguide/cgexclude.md`. Skip paths matching ignore entirely. Skip paths matching exclude for doc checks (but verify they appear in Overview.md).
 
-5. **For each doc in scope:**
+5. **Determine scope:** Parse `$ARGUMENTS` to identify which project(s) and doc file(s) to sync. If no argument, find all projects that have `_codeguide/Overview.md`.
+
+6. **For each doc in scope:**
 
    a. **Read the existing doc.**
 
    b. **Read the corresponding source file(s)** to check if behavior, interfaces, or relationships have changed.
 
-   c. **Check the Source section:** Verify that the relative paths in the `## Source` section resolve to existing files. If a path is broken, search for the file by name and update the path. If the Source section is missing, add it using relative paths from the doc to the source file(s).
+   c. **Check the Source section:** Verify that the relative paths in the `## Source` section resolve to existing files. If a path is broken, search for the file by name and update the path. If the Source section is missing, add it.
 
    d. **Check doc content against source code:**
       - Stale content (doc describes behavior that no longer matches the code)
       - Code-derived values that should not be in the doc (formulas, thresholds, constants)
 
    e. **Check doc structure against guide and local rules:**
-      - Missing required sections (e.g., "When not to use", "Relationships", negative boundaries in Overviews)
-      - Sections that don't match guide conventions (e.g., API signatures that should be capability summaries)
+      - Missing required sections
+      - Sections that don't match guide conventions
       - Formatting or structural issues
       - Violations of local rules
 
-   f. **Update the doc** if any of the above apply. Preserve accurate existing content — only change what's wrong or missing.
+   f. **Check link rules:**
+      - No sibling links (links to other docs in the same folder)
+      - Cross-area links must target Overview.md, not specific module docs
 
-6. **Check Overview routing tables:** Verify that the project Overview's module table matches the actual doc files (no missing entries, no dead links, routing hints still accurate).
+   g. **Update the doc** if any of the above apply. Preserve accurate existing content — only change what's wrong or missing.
 
-7. **Report changes:** Summarize what was updated and which rule or code change triggered each fix.
+7. **Check Overview routing tables:** For each Overview.md in scope:
+   - Every `.md` file in `modules/` must have a row in the table
+   - Every link in the table must resolve to an existing file
+   - Excluded modules (from cgexclude.md) must appear with a brief description
+   - Fix any issues found
+
+8. **Validate local rules:** For each verifiable rule in `local-rules.md`, spot-check against the code. If there is a mismatch, **stop and ask the user** — is the rule outdated or the code non-conforming? Do not auto-fix.
+
+9. **Report changes:** Summarize what was updated and which rule or code change triggered each fix.
 
 ## Rules
 
-- Read the Documentation Guide and local rules first — do not rely on memory of what they say.
-- Do not create new docs for undocumented source files. That is `/codeguide-generate`'s job. However, flag undocumented source files to the user so they know what's missing. For large scopes, summarize (e.g., "none of the source files in ProjectX are documented") rather than listing every file.
+- Read the Documentation Guide and local rules first — do not rely on memory.
+- Do not create new docs for undocumented source files. That is `/codeguide-generate`'s job. Flag undocumented files to the user.
 - Do not delete docs. If a doc has no corresponding source, flag it to the user.
 - Preserve accurate existing content. Only modify what is structurally wrong or factually stale.
 - When updating structure to match the guide, keep the existing content's meaning intact.

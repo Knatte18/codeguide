@@ -1,7 +1,7 @@
 ---
 name: codeguide-init
 description: "Initialize _codeguide/ in the current repo. Creates skeleton files, config, and .gitignore entry. Run once per repo."
-argument-hint: "[--extensions .cs .py .ts]"
+argument-hint: "[.cs .py .ts]"
 ---
 
 Initialize `_codeguide/` in the current repository. Run this once after installing the codeguide plugin. Does **not** commit.
@@ -13,6 +13,8 @@ _codeguide/
 ├── config.yaml                    ← source file extensions (you own this)
 ├── local-rules.md                 ← repo-specific doc rules (you own this)
 ├── Overview.md                    ← repo routing table (you own this)
+├── cgignore.md                    ← system-level ignores (plugin-owned)
+├── cgexclude.md                   ← module exclusions (you own this)
 ├── NavigationHooks.md             ← hook reference (plugin-owned)
 ├── modules/
 │   └── DocumentationGuide.md      ← how to write docs (plugin-owned)
@@ -28,6 +30,8 @@ _codeguide/
    - `templates/DocumentationGuide.md`
    - `templates/config.yaml`
    - `templates/local-rules.md`
+   - `templates/cgignore.md`
+   - `templates/cgexclude.md`
    - `hooks/NavigationHooks.md`
 
 3. **Create directories:** Create `_codeguide/modules/` and `_codeguide/runtime/sessions/`.
@@ -35,10 +39,12 @@ _codeguide/
 4. **Copy plugin-owned files** (always overwritten on re-run):
    - `templates/DocumentationGuide.md` → `_codeguide/modules/DocumentationGuide.md`
    - `hooks/NavigationHooks.md` → `_codeguide/NavigationHooks.md`
+   - `templates/cgignore.md` → `_codeguide/cgignore.md`
 
 5. **Create repo-specific files** (only if they don't exist):
-   - `_codeguide/config.yaml` — if `$ARGUMENTS` contains `--extensions`, write a config with those extensions. Otherwise copy the template (with commented-out examples).
+   - `_codeguide/config.yaml` — if `$ARGUMENTS` contains extensions (args starting with `.`), write a config with those extensions. Otherwise copy the template (with commented-out examples).
    - `_codeguide/local-rules.md` — copy from template.
+   - `_codeguide/cgexclude.md` — copy from template (empty, user adds entries).
    - `_codeguide/Overview.md` — create with starter content:
      ```markdown
      # Repo Overview

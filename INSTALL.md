@@ -44,7 +44,7 @@ Close and reopen Claude Code in the target repo so it picks up the plugin.
 ### 4. Set up the documentation skeleton
 
 ```
-/codeguide-init --extensions .cs .py
+/codeguide-init .cs .py
 ```
 
 This creates the `_codeguide/` directory with config, templates, and runtime folders.

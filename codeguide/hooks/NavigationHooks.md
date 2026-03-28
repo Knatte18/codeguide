@@ -39,7 +39,6 @@ Always active regardless of flags.
 | Hook | Event | What it does |
 |---|---|---|
 | `base_inject_routing.py` | UserPromptSubmit, SubagentStart | Injects imperative routing instructions — Claude must actively Read Overview.md |
-| `base_remind_docs.py` | PostToolUse (Edit/Write) | Reminds Claude to verify docs when source files or `_codeguide/` module docs are modified |
 
 ### Enforcement hooks (`enforce_`)
 
@@ -95,10 +94,7 @@ _codeguide/
 
 ## Known Limitations
 
-The doc-update hook (`base_remind_docs.py`) only fires on Edit and Write. File deletions, moves, and renames go through Bash, which the hook does not match. These cases are covered by periodic skills instead:
-
-- **Orphan docs** (source deleted/moved) → `/codeguide-check` flags docs with no corresponding source
-- **Missing docs** (new source without a doc) → `/codeguide-generate` creates them
+Doc maintenance is handled by skills, not hooks. Use `/codeguide-update` after making changes, or let mill-commit call it automatically. For larger updates, use `/codeguide-sync` (scoped) or `/codeguide-generate` (scoped).
 
 ---
 
