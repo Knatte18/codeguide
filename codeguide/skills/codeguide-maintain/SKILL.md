@@ -1,17 +1,23 @@
 ---
 name: codeguide-maintain
 description: "Fix existing docs: content accuracy, structural violations, pointers, links, local-rules. Heavy, scoped."
-argument-hint: "[project] [module-path]"
+argument-hint: "[--structure] [project] [module-path]"
 ---
 
 Sync existing `_codeguide/` documentation with current source code, Documentation Guide, and local rules. Fixes content accuracy, structural compliance, pointer consistency, and link rules. Does **not** commit.
 
+## Modes
+
+- **Full** (default): reads source files and docs. Fixes content accuracy, structure, pointers, links.
+- **Structure** (`--structure`): reads docs only, no source. Fixes doc structure against the guide and local rules, Overview tables, link rules, cgexclude entries. Fast — use after updating the guide, local rules, or cgexclude.md.
+
 ## When to use
 
-- After code changes that affect module behavior, interfaces, or relationships
-- After adding or changing a rule in `local-rules.md`
-- After a plugin update brings a new `DocumentationGuide.md`
-- As a full audit + fix pass on a project
+- After code changes that affect module behavior, interfaces, or relationships → full mode
+- After adding or changing a rule in `local-rules.md` → `--structure`
+- After a plugin update brings a new `DocumentationGuide.md` → `--structure`
+- After editing `cgexclude.md` → `--structure`
+- As a full audit + fix pass on a project → full mode
 
 ## Scope
 
@@ -38,11 +44,11 @@ Sync existing `_codeguide/` documentation with current source code, Documentatio
 
    a. **Read the existing doc.**
 
-   b. **Read the corresponding source file(s)** to check if behavior, interfaces, or relationships have changed.
+   b. *(full mode only)* **Read the corresponding source file(s)** to check if behavior, interfaces, or relationships have changed.
 
-   c. **Check the Source section:** Verify that the relative paths in the `## Source` section resolve to existing files. If a path is broken, search for the file by name and update the path. If the Source section is missing, add it.
+   c. *(full mode only)* **Check the Source section:** Verify that the relative paths in the `## Source` section resolve to existing files. If a path is broken, search for the file by name and update the path. If the Source section is missing, add it.
 
-   d. **Check doc content against source code:**
+   d. *(full mode only)* **Check doc content against source code:**
       - Stale content (doc describes behavior that no longer matches the code)
       - Code-derived values that should not be in the doc (formulas, thresholds, constants)
 
@@ -65,7 +71,7 @@ Sync existing `_codeguide/` documentation with current source code, Documentatio
    - Remove any "not yet documented" placeholder rows — a module either has docs, is excluded, or is not listed
    - Fix any issues found
 
-8. **Validate local rules:** For each verifiable rule in `local-rules.md`, spot-check against the code. If there is a mismatch, **stop and ask the user** — is the rule outdated or the code non-conforming? Do not auto-fix.
+8. *(full mode only)* **Validate local rules:** For each verifiable rule in `local-rules.md`, spot-check against the code. If there is a mismatch, **stop and ask the user** — is the rule outdated or the code non-conforming? Do not auto-fix.
 
 9. **Report changes:** Summarize what was updated and which rule or code change triggered each fix.
 
