@@ -33,7 +33,7 @@ Update `_codeguide/` docs for source files that changed recently. Designed to be
 
    b. **If doc exists:** Read the doc and the source file. If the doc is stale or inaccurate, update it. Preserve accurate content.
 
-   c. **If no doc exists:** Create it following the guide structure. Update the project Overview.md module table.
+   c. **If no doc exists and not in cgexclude:** Create it following the guide structure. Update the project Overview.md module table.
 
    d. **If source was deleted** (only applies to git diff scope): Flag the orphan doc to the user. Do not delete it.
 

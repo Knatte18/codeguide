@@ -61,7 +61,8 @@ Sync existing `_codeguide/` documentation with current source code, Documentatio
 7. **Check Overview routing tables:** For each Overview.md in scope:
    - Every `.md` file in `modules/` must have a row in the table
    - Every link in the table must resolve to an existing file
-   - Excluded modules (from cgexclude.md) must appear with a brief description
+   - Excluded modules (from cgexclude.md) must appear with their description and *excluded* in the Doc column
+   - Remove any "not yet documented" placeholder rows — a module either has docs, is excluded, or is not listed
    - Fix any issues found
 
 8. **Validate local rules:** For each verifiable rule in `local-rules.md`, spot-check against the code. If there is a mismatch, **stop and ask the user** — is the rule outdated or the code non-conforming? Do not auto-fix.

@@ -45,7 +45,7 @@ Generate `_codeguide/` documentation for source files that don't have correspond
 9. **Create docs for new project (if no Overview exists):**
    - Create `_codeguide/` and `_codeguide/modules/`
    - Write `_codeguide/Overview.md` with: scope, negative boundaries, dependencies, module table with routing hints, cross-cutting patterns
-   - Include excluded modules (from cgexclude.md) in the Overview with their descriptions
+   - Include excluded modules (from cgexclude.md) in the Overview table with their description from cgexclude. Mark them as *excluded* in the Doc column. Do not add "not yet documented" placeholders.
    - Update the repo-level `_codeguide/Overview.md` project table
 
 10. **Write module docs:** For each undocumented module, create the doc following the guide structure:
@@ -55,7 +55,7 @@ Generate `_codeguide/` documentation for source files that don't have correspond
     - Relationships (depends on, consumed by)
     - Source — relative paths from the doc file to each source file it covers
 
-11. **Update the project Overview:** Add rows to the module table for each new doc. Update routing hints if the new modules change the project's scope.
+11. **Update the project Overview:** Add rows to the module table for each new doc. For excluded modules (from cgexclude.md), add a row with the description from cgexclude and *excluded* in the Doc column. Never add "not yet documented" placeholder rows — a module either has docs, is excluded, or is not listed.
 
 12. **Update IDE visibility (language-specific):** For .NET projects with a `.csproj`, ensure `<None Include="_codeguide\**\*.md" />` is in an ItemGroup. Skip for other languages.
 
