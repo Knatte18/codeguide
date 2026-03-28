@@ -11,7 +11,7 @@ import sys
 import json
 import os
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "scripts"))
 from _resolve import load_source_extensions
 
 source_extensions = load_source_extensions()

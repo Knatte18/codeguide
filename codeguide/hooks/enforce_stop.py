@@ -12,7 +12,7 @@ import pathlib
 import sys
 from datetime import datetime, timezone
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "scripts"))
 from _resolve import routing_root, load_config_flag
 
 data = json.load(sys.stdin)

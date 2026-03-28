@@ -8,7 +8,9 @@ Detect module docs whose source files have been committed more recently than the
 
 ## Steps
 
-1. **Determine scope:** Parse `$ARGUMENTS` to get source file or folder paths. If no argument, find all source files in the current project using extensions from `_codeguide/config.yaml`.
+1. **Find `_codeguide/`:** Run `python ${CLAUDE_PLUGIN_ROOT}/scripts/_resolve.py` to locate the nearest `_codeguide/` containing config.yaml. Use the returned path as the base for all `_codeguide/` references below. If it exits with an error, stop — run `/codeguide-init` first.
+
+2. **Determine scope:** Parse `$ARGUMENTS` to get source file or folder paths. If no argument, find all source files in the current project using extensions from `_codeguide/config.yaml`.
 
 2. **For each source file:**
 

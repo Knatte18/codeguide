@@ -56,6 +56,12 @@ def load_config_flag(flag: str, cwd: str | None = None) -> bool:
     return False
 
 
+def metadata_root(cwd: str | None = None) -> pathlib.Path | None:
+    """Find the nearest _codeguide/ containing the metadata anchor."""
+    path = config_path(cwd)
+    return path.parent if path else None
+
+
 def load_source_extensions(cwd: str | None = None) -> list[str]:
     """Load source extensions from the nearest config.yaml."""
     path = config_path(cwd)
@@ -71,3 +77,12 @@ def load_source_extensions(cwd: str | None = None) -> list[str]:
     except FileNotFoundError:
         pass
     return extensions
+
+
+if __name__ == "__main__":
+    root = metadata_root()
+    if root:
+        print(root)
+    else:
+        print("ERROR: no _codeguide/ with config.yaml found", file=__import__("sys").stderr)
+        __import__("sys").exit(1)

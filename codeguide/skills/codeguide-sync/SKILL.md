@@ -23,13 +23,15 @@ Sync existing `_codeguide/` documentation with the current source code, Document
 
 ## Steps
 
-1. **Read the Documentation Guide:** Read `_codeguide/modules/DocumentationGuide.md` in full. This is the authoritative structure — it may have changed since the docs were last written.
+1. **Find `_codeguide/`:** Run `python ${CLAUDE_PLUGIN_ROOT}/scripts/_resolve.py` to locate the nearest `_codeguide/` containing config.yaml. Use the returned path as the base for all `_codeguide/` references below. If it exits with an error, stop — run `/codeguide-init` first.
 
-2. **Read local rules:** Read `_codeguide/local-rules.md` if it exists. These are repo-specific additions to the guide.
+2. **Read the Documentation Guide:** Read `_codeguide/modules/DocumentationGuide.md` in full. This is the authoritative structure — it may have changed since the docs were last written.
 
-3. **Determine scope:** Parse `$ARGUMENTS` to identify which project(s) and doc file(s) to sync. If no argument, find all projects that have `_codeguide/Overview.md`.
+3. **Read local rules:** Read `_codeguide/local-rules.md` if it exists. These are repo-specific additions to the guide.
 
-4. **For each doc in scope:**
+4. **Determine scope:** Parse `$ARGUMENTS` to identify which project(s) and doc file(s) to sync. If no argument, find all projects that have `_codeguide/Overview.md`.
+
+5. **For each doc in scope:**
 
    a. **Read the existing doc.**
 
@@ -49,9 +51,9 @@ Sync existing `_codeguide/` documentation with the current source code, Document
 
    f. **Update the doc** if any of the above apply. Preserve accurate existing content — only change what's wrong or missing.
 
-5. **Check Overview routing tables:** Verify that the project Overview's module table matches the actual doc files (no missing entries, no dead links, routing hints still accurate).
+6. **Check Overview routing tables:** Verify that the project Overview's module table matches the actual doc files (no missing entries, no dead links, routing hints still accurate).
 
-6. **Report changes:** Summarize what was updated and which rule or code change triggered each fix.
+7. **Report changes:** Summarize what was updated and which rule or code change triggered each fix.
 
 ## Rules
 

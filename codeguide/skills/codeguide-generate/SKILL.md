@@ -16,43 +16,45 @@ Generate `_codeguide/` documentation for source files that don't have correspond
 
 ## Steps
 
-1. **Read the Documentation Guide:** Read `_codeguide/modules/DocumentationGuide.md` in full. All docs must follow its structure.
+1. **Find `_codeguide/`:** Run `python ${CLAUDE_PLUGIN_ROOT}/scripts/_resolve.py` to locate the nearest `_codeguide/` containing config.yaml. Use the returned path as the base for all `_codeguide/` references below. If it exits with an error, stop — run `/codeguide-init` first.
 
-2. **Read local rules:** Read `_codeguide/local-rules.md` if it exists. These are repo-specific additions to the guide.
+2. **Read the Documentation Guide:** Read `_codeguide/modules/DocumentationGuide.md` in full. All docs must follow its structure.
 
-3. **Read source extensions:** Read `_codeguide/config.yaml` to get the list of recognized source extensions.
+3. **Read local rules:** Read `_codeguide/local-rules.md` if it exists. These are repo-specific additions to the guide.
 
-4. **Scan source structure:** List all folders and source files matching those extensions in scope (excluding build output directories like `obj/`, `bin/`, `__pycache__/`, `.venv/`).
+4. **Read source extensions:** Read `_codeguide/config.yaml` to get the list of recognized source extensions.
 
-5. **Identify undocumented source:** For each source file or source folder, check if a corresponding doc exists using the naming rules from the guide:
+5. **Scan source structure:** List all folders and source files matching those extensions in scope (excluding build output directories like `obj/`, `bin/`, `__pycache__/`, `.venv/`).
+
+6. **Identify undocumented source:** For each source file or source folder, check if a corresponding doc exists using the naming rules from the guide:
    - `parser.py` → `_codeguide/modules/Parser.md`
    - `utils/` (folder) → `_codeguide/modules/Utils.md`
    - If the doc exists and is current, skip it.
 
-6. **Read undocumented source files:** Read only the source files that need new docs. Use parallel agent reads for large sets.
+7. **Read undocumented source files:** Read only the source files that need new docs. Use parallel agent reads for large sets.
 
-7. **Decide doc granularity:** Following the guide's rules:
+8. **Decide doc granularity:** Following the guide's rules:
    - One doc per source file or source folder
    - Large modules with subfolders get their own `_codeguide/modules/<Module>/Overview.md` + per-file docs
    - Small modules get a flat `_codeguide/modules/<Name>.md`
 
-8. **Create docs for new project (if no Overview exists):**
+9. **Create docs for new project (if no Overview exists):**
    - Create `_codeguide/` and `_codeguide/modules/`
    - Write `_codeguide/Overview.md` with: scope, negative boundaries, dependencies, module table with routing hints, cross-cutting patterns
    - Update the repo-level `_codeguide/Overview.md` project table
 
-9. **Write module docs:** For each undocumented module, create the doc following the guide structure:
-   - What and why
-   - Capability summaries (plain language, no signatures)
-   - When not to use (negative space)
-   - Relationships (depends on, consumed by)
-   - Source — relative paths from the doc file to each source file it covers (see Documentation Guide for format)
+10. **Write module docs:** For each undocumented module, create the doc following the guide structure:
+    - What and why
+    - Capability summaries (plain language, no signatures)
+    - When not to use (negative space)
+    - Relationships (depends on, consumed by)
+    - Source — relative paths from the doc file to each source file it covers (see Documentation Guide for format)
 
-10. **Update the project Overview:** Add rows to the module table for each new doc. Update routing hints if the new modules change the project's scope.
+11. **Update the project Overview:** Add rows to the module table for each new doc. Update routing hints if the new modules change the project's scope.
 
-11. **Update IDE visibility (language-specific):** For .NET projects with a `.csproj`, ensure `<None Include="_codeguide\**\*.md" />` is in an ItemGroup. Skip for other languages.
+12. **Update IDE visibility (language-specific):** For .NET projects with a `.csproj`, ensure `<None Include="_codeguide\**\*.md" />` is in an ItemGroup. Skip for other languages.
 
-12. **Report:** List what was created and what was skipped (already documented).
+13. **Report:** List what was created and what was skipped (already documented).
 
 ## Rules
 

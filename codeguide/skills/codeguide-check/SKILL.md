@@ -17,6 +17,10 @@ Read `_codeguide/modules/DocumentationGuide.md` first. It defines the linking ru
 - No argument → all documented projects + repo-level docs
 - `MyProject` → only that project's `_codeguide/`
 
+## Resolve
+
+Before starting, run `python ${CLAUDE_PLUGIN_ROOT}/scripts/_resolve.py` to locate the nearest `_codeguide/` containing config.yaml. Use the returned path as the base for all `_codeguide/` references below. If it exits with an error, stop — run `/codeguide-init` first.
+
 ## Checks
 
 ### 1. Overview module tables

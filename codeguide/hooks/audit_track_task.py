@@ -7,7 +7,7 @@ import os
 import pathlib
 import sys
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "scripts"))
 from _resolve import routing_root
 
 data = json.load(sys.stdin)

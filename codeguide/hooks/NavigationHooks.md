@@ -29,7 +29,7 @@ Toggle with `/codeguide-tracking enforcement on|off` or `/codeguide-tracking log
 
 | File | What it does |
 |---|---|
-| `_resolve.py` | Two-tier path resolution shared by all hooks. Routing files (Overview.md, modules/) resolve from cwd. Metadata files (config.yaml, local-rules.md) resolve by walking up to the nearest ancestor that contains them. |
+| `../scripts/_resolve.py` | Two-tier path resolution shared by all hooks and skills. Routing files (Overview.md, modules/) resolve from cwd. Metadata files (config.yaml, local-rules.md) resolve by walking up to the nearest ancestor that contains them. Also callable as a CLI: prints the metadata `_codeguide/` path. |
 | `_merge_hooks.py` | Composes hooks.json from base files. Called by `/codeguide-tracking` when flags change. |
 
 ### Base hooks (`base_`)
@@ -67,7 +67,7 @@ Active when `violation_logging: true`. Track subagent parity for `/review-naviga
 
 A turn-scoped session state file tracks whether `_codeguide/` has been read and how many search calls have been made. If the search count exceeds the threshold without `_codeguide/` having been read, the search tool is blocked until the guide is read.
 
-All hooks use two-tier path resolution (`_resolve.py`): routing files (Overview.md, modules/) are resolved from cwd, while metadata files (config.yaml, local-rules.md) are found by walking up from cwd to the nearest ancestor containing them. This allows VS Code to open a subfolder while hooks still find repo-level configuration.
+All hooks use two-tier path resolution (`scripts/_resolve.py`): routing files (Overview.md, modules/) are resolved from cwd, while metadata files (config.yaml, local-rules.md) are found by walking up from cwd to the nearest ancestor containing them. This allows VS Code to open a subfolder while hooks still find repo-level configuration.
 
 Subagents receive routing instructions (not the verbatim Overview) since they cannot inherit hook context. They must actively Read the Overview like the main conversation.
 

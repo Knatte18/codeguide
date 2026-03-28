@@ -23,18 +23,18 @@ The repo's `_codeguide/config.yaml` is user-owned — reload never overwrites it
 
 ## Steps
 
-1. **Check prerequisites:** Verify `_codeguide/` exists in the working directory. If not, stop with an error — run `/codeguide-init` first.
+1. **Find the target `_codeguide/`:** Run `python ${CLAUDE_PLUGIN_ROOT}/scripts/_resolve.py`. It prints the path to the nearest `_codeguide/` containing config.yaml (walks up from cwd). If it exits with an error, stop — run `/codeguide-init` first.
 
 2. **Read plugin source files** from `${CLAUDE_PLUGIN_ROOT}`:
    - `templates/DocumentationGuide.md`
    - `hooks/NavigationHooks.md`
    - `templates/config.yaml`
 
-3. **Overwrite local copies:**
+3. **Overwrite local copies** at the target found in step 1:
    - `_codeguide/modules/DocumentationGuide.md`
    - `_codeguide/NavigationHooks.md`
 
-4. **Merge config schema:** Compare `templates/config.yaml` with `_codeguide/config.yaml`. Add missing keys with defaults (see Config schema merge above).
+4. **Merge config schema:** Compare `templates/config.yaml` with the target's `_codeguide/config.yaml`. Add missing keys with defaults (see Config schema merge above).
 
 5. **Report** what was updated. If a file was identical to the source, say so. List any config keys that were added.
 
