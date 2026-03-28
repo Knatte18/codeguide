@@ -51,9 +51,9 @@ _codeguide/
 6. **Copy plugin-owned files:**
    - `templates/DocumentationGuide.md` → `_codeguide/modules/DocumentationGuide.md`
    - `hooks/NavigationHooks.md` → `_codeguide/NavigationHooks.md`
-   - `templates/cgignore.md` → `_codeguide/cgignore.md`
 
 7. **Create user-owned files** (only if they don't exist):
+   - `_codeguide/cgignore.md` — copy from template (user adds repo-specific entries).
    - `_codeguide/config.yaml` — if `$ARGUMENTS` contains extensions (args starting with `.`), write a config with those extensions. Otherwise copy the template.
    - `_codeguide/local-rules.md` — copy from template.
    - `_codeguide/cgexclude.md` — copy from template.
@@ -80,14 +80,12 @@ _codeguide/
 
 3. **Read plugin source files** from `${CLAUDE_PLUGIN_ROOT}`:
    - `templates/DocumentationGuide.md`
-   - `templates/cgignore.md`
    - `hooks/NavigationHooks.md`
    - `templates/config.yaml`
 
 4. **Overwrite plugin-owned files:**
    - `_codeguide/modules/DocumentationGuide.md`
    - `_codeguide/NavigationHooks.md`
-   - `_codeguide/cgignore.md`
 
 5. **Merge config schema:** For each key in the template that is missing from the repo's `_codeguide/config.yaml`, add it with its default value and comment. Do not change existing values.
 

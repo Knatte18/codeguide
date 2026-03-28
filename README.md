@@ -50,7 +50,7 @@ After install and setup:
 |---|---|---|
 | `_codeguide/modules/DocumentationGuide.md` | Plugin | Overwritten by `/codeguide-setup` |
 | `_codeguide/NavigationHooks.md` | Plugin | Overwritten by `/codeguide-setup` |
-| `_codeguide/cgignore.md` | Plugin | Overwritten by `/codeguide-setup` |
+| `_codeguide/cgignore.md` | User | Created from template, never overwritten |
 | `_codeguide/config.yaml` | User | New keys merged by `/codeguide-setup` |
 | `_codeguide/local-rules.md` | User | Preserved |
 | `_codeguide/cgexclude.md` | User | Preserved |

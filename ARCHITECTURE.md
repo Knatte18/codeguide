@@ -71,7 +71,7 @@ Enforcement hooks require `enforcement: true` in config.yaml. Audit hooks requir
 |---|---|---|
 | `_codeguide/modules/DocumentationGuide.md` | Plugin | Yes |
 | `_codeguide/NavigationHooks.md` | Plugin | Yes |
-| `_codeguide/cgignore.md` | Plugin | Yes |
+| `_codeguide/cgignore.md` | User | No (created from template) |
 | `_codeguide/config.yaml` | User | No (new keys merged) |
 | `_codeguide/local-rules.md` | User | No |
 | `_codeguide/cgexclude.md` | User | No |
